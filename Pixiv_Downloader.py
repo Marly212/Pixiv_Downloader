@@ -31,15 +31,20 @@ dark_palette.setColor(QPalette.HighlightedText, Qt.black)
 # endregion
 
 api = AppPixivAPI()
-aapi = AppPixivAPI()
-list3 = []
-list4 = []
+
+# Images ist die Liste für die Labels zum Füllen
 images = []
+
+# List_of_checked ist die Liste aller Makierten Labels zum Herunterladen
 List_of_checked = []
+
+# List_of_unchecked ist die Liste aller nicht Makierten Labels
 List_of_unchecked = []
+
+#List_to_download ist die Liste für die Downloadlinks der ausgewählten Bildern
 List_to_download = []
+
 base_name = ""
-List_test = []
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -145,7 +150,7 @@ class Ui_MainWindow(object):
         self.brecommended.setGeometry(QtCore.QRect(130, 100, 80, 23))
         self.brecommended.setObjectName("Recommended")
         self.brecommended.setDisabled(True)
-        self.brecommended.clicked.connect(self.on_click_ranking)
+        self.brecommended.clicked.connect(self.on_click_recommended)
         # endregion
 
         # region Labelfelder
@@ -566,7 +571,6 @@ class Ui_MainWindow(object):
                 base_name = os.path.basename(illust_ranking.illusts[id].image_urls.medium)
                 api.download(thumbnail_url, path=tempfile.gettempdir(), name=base_name)
                 images.append(tempfile.gettempdir() + "\\" + base_name)
-                List_test.append(tempfile.gettempdir() + "\\" + base_name)
                 id = id + 1
             self.labels(images)
 
@@ -577,16 +581,14 @@ class Ui_MainWindow(object):
         finally:
             self.status = 1
 
-    def on_click_ranking(self):
+    def on_click_recommended(self):
         try:
-            if self.status == 1:
-                self.onclose()
+            self.onclose()
             rank_list = api.illust_recommended()
             id = 1
             for illust in rank_list.illusts[:24]:
                 thumbnail_url = rank_list.illusts[id].image_urls.medium
                 base_name = os.path.basename(rank_list.illusts[id].image_urls.medium)
-                List_test.append(base_name)
                 api.download(thumbnail_url, path=tempfile.gettempdir(), name=base_name)
                 images.append(tempfile.gettempdir() + "\\" + base_name)
                 id = id + 1
@@ -594,6 +596,7 @@ class Ui_MainWindow(object):
 
         except Exception as e:
             self.txtausgabe.setText(e)
+            print(e)
 
         finally:
             self.status = 1
@@ -723,9 +726,9 @@ class Ui_MainWindow(object):
             self.txtausgabe.setText(e)
 
     def onclose(self):
-        print(List_test)
         for image in images:
             os.remove(image)
+        images.clear()
 
 
 if __name__ == "__main__":
