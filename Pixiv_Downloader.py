@@ -737,12 +737,12 @@ if __name__ == "__main__":
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
     MainWindow.show()
-    onopenusername = open("username.txt", "r")
-    ui.lusername.setText(onopenusername.read())
-    onopenusername.close()
-    onopenpassword = open("password.txt", "r")
-    ui.lpassword.setText(onopenpassword.read())
-    onopenpassword.close()
+    #onopenusername = open("username.txt", "r")
+    #ui.lusername.setText(onopenusername.read())
+    #onopenusername.close()
+    #onopenpassword = open("password.txt", "r")
+    #ui.lpassword.setText(onopenpassword.read())
+    #onopenpassword.close()
     sys.exit(app.exec_())
 
 
